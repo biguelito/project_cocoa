@@ -27,3 +27,7 @@ if __name__ == '__main__':
     st.subheader('Linha do tempo das Reviews')
     quantidade_por_data = cocoa.groupby(['Review Date']).size()
     st.area_chart(quantidade_por_data)
+
+    st.subheader('Origem das Sementes')
+    origem_sementes_qtd = cocoa.groupby(['Country of Bean Origin']).size()
+    cocoa_hist = st.bar_chart(origem_sementes_qtd)
