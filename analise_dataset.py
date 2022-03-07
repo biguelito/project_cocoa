@@ -1,6 +1,9 @@
+from cgitb import reset
+from itertools import count
 import streamlit as st
 import pandas as pd
 import numpy as np
+
 
 @st.cache
 def load_data(rows=2712):
@@ -13,7 +16,14 @@ if __name__ == '__main__':
 
     data_load_state = st.text('Loading data...')
     cocoa = load_data()
-    data_load_state.text("Done! (using st.cache)")
+    data_load_state.text("Analise de dados do dataset Cocoa")
 
-    st.subheader('Raw data')
+    st.subheader('Dado integral')
     st.write(cocoa)
+
+    st.subheader('Histograma de Quantidade/Notas')
+    quantidade_por_notas = cocoa.groupby(['Rating']).size()
+    st.bar_chart(quantidade_por_notas)
+    st.subheader('Linha do tempo das Reviews')
+    quantidade_por_data = cocoa.groupby(['Review Date']).size()
+    st.area_chart(quantidade_por_data)
