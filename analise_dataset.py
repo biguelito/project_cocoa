@@ -3,31 +3,27 @@ from itertools import count
 import streamlit as st
 import pandas as pd
 import numpy as np
+import os
 
 
 @st.cache
-def load_data(rows=2712):
-    data = pd.read_csv('dataset\\chocolate_ratings.csv', nrows=rows)
+def load_data(dataset, rows=100):
+    data = pd.read_csv(f'dataset\\{dataset}.csv', nrows=rows)
     return data
 
 
 if __name__ == '__main__':
-    st.title('COCOA')
+    datasets = {}
+    listagem_datasets = os.listdir('.\\dataset\\')
+    for dataset in listagem_datasets:
+        dt = dataset.split('.')[0]
+        datasets[dt] = load_data(dt)
+    
+    st.title('COCOA?')
 
-    data_load_state = st.text('Loading data...')
-    cocoa = load_data()
-    data_load_state.text("Analise de dados do dataset Cocoa")
-
-    st.subheader('Dado integral')
-    st.write(cocoa)
-
-    st.subheader('Histograma de Quantidade/Notas')
-    quantidade_por_notas = cocoa.groupby(['Rating']).size()
-    st.bar_chart(quantidade_por_notas)
-    st.subheader('Linha do tempo das Reviews')
-    quantidade_por_data = cocoa.groupby(['Review Date']).size()
-    st.area_chart(quantidade_por_data)
-
-    st.subheader('Origem das Sementes')
-    origem_sementes_qtd = cocoa.groupby(['Country of Bean Origin']).size()
-    cocoa_hist = st.bar_chart(origem_sementes_qtd)
+    datasets_state = st.text('Carregando datasets')
+    for dataset_nome, dataset in datasets.items():
+        st.text(dataset_nome)
+        st.write(dataset)
+    datasets_state.text("Dados do café")
+    
