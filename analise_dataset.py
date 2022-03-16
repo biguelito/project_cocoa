@@ -68,9 +68,15 @@ if __name__ == '__main__':
     st.markdown("""#### Checando os valores nulos.""")
     st.write(coffe_reviews.isnull().sum())
 
-    country_entries = coffe_reviews.filter(['Country.of.Origin']).value_counts()
-    df_country_entries = pd.DataFrame(country_entries)
-    df_country_entries = df_country_entries.reset_index()
-    df_country_entries.columns = ['Country', 'Entries']
-
-    st.write(df_country_entries)
+    st.markdown("""#### Análise dos Dados""")
+    country_entries = coffe_reviews['Country.of.Origin'].value_counts().to_frame()
+    country_entries = country_entries.reset_index()
+    country_entries.columns = ['Países', 'Registros']
+    st.write(country_entries)
+    chart = alt.Chart(country_entries).mark_bar().encode(
+        x = 'Registros',
+        y = alt.Y('Países', sort='-x'),
+        tooltip=['Registros']
+    ).interactive()
+    st.markdown("""#### Gráfico de barra País/Registros""")
+    st.altair_chart(chart, use_container_width=True)
