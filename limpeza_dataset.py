@@ -23,11 +23,11 @@ if __name__ == '__main__':
     
     st.title('Café')
 
-    datasets_state = st.text('Carregando datasets')
-    for dataset_nome, dataset in datasets.items():
-        st.text(dataset_nome)
-        st.write(dataset)
-    datasets_state.text("Dados do café")
+    # datasets_state = st.text('Carregando datasets')
+    # for dataset_nome, dataset in datasets.items():
+    #     st.text(dataset_nome)
+    #     st.write(dataset)
+    # datasets_state.text("Dados do café")
 
     st.markdown("# Dataset de Reviews")
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     st.write(merged_coffe_reviews.shape)
 
     st.markdown("""#### Checando valores únicos.""")
-    st.write(merged_coffe_reviews.nunique())
+    st.write(merged_coffe_reviews.nunique(dropna=False))
 
     st.markdown("""#### Checando os valores nulos.""")
     st.write(merged_coffe_reviews.isnull().sum())
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     st.write(coffe_reviews.shape)
 
     st.markdown("""#### Checando valores únicos.""")
-    st.write(coffe_reviews.nunique())
+    st.write(coffe_reviews.nunique(dropna=False))
 
     st.markdown("""#### Checando os valores nulos.""")
     st.write(coffe_reviews.isnull().sum())
@@ -73,10 +73,29 @@ if __name__ == '__main__':
     country_entries = country_entries.reset_index()
     country_entries.columns = ['Países', 'Registros']
     st.write(country_entries)
+
+    st.markdown("""#### Gráfico de barra País/Registros""")
     chart = alt.Chart(country_entries).mark_bar().encode(
         x = 'Registros',
         y = alt.Y('Países', sort='-x'),
         tooltip=['Registros']
-    ).interactive()
-    st.markdown("""#### Gráfico de barra País/Registros""")
+    )
     st.altair_chart(chart, use_container_width=True)
+
+    st.markdown('### Capturando Outliers')
+    st.markdown('#### Método de processamentos')
+    processing_method = coffe_reviews['Processing.Method'].value_counts(dropna=False)
+    st.write(processing_method)
+
+    st.markdown('#### Cor dos grãos')
+    color_of_coffee = coffe_reviews['Color'].value_counts(dropna=False)
+    st.write(color_of_coffee)
+
+    st.markdown('#### Variedade dos Grãos')
+    variety_of_coffee = coffe_reviews['Variety'].value_counts(dropna=False)
+    st.write(variety_of_coffee)
+
+    st.markdown('#### Tabela de outliers')
+    outliers = coffe_reviews[coffe_reviews['Processing.Method'].isna()| coffe_reviews['Color'].isna()|coffe_reviews['Variety'].isna()]
+    st.write(outliers)
+    st.write(outliers.shape)
