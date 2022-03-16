@@ -14,6 +14,10 @@ def load_data(dataset, rows=100):
     return data
 
 
+def refactor_null_processing_values(coffe_reviews):
+    mask = coffe_reviews['Processing.Method'].isna()
+    coffe_reviews.loc[mask, 'Processing.Method'] = coffe_reviews.loc[mask,'Processing.Method'].fillna('Washed / Wet')
+
 if __name__ == '__main__':
     datasets = {}
     listagem_datasets = os.listdir('.\\dataset\\')
@@ -96,6 +100,31 @@ if __name__ == '__main__':
     st.write(variety_of_coffee)
 
     st.markdown('#### Tabela de outliers')
+    outliers_processing = coffe_reviews[coffe_reviews['Processing.Method'].isna()]
+    outliers_color = coffe_reviews[coffe_reviews['Color'].isna()]
+    outliers_variety = coffe_reviews[coffe_reviews['Variety'].isna()]
     outliers = coffe_reviews[coffe_reviews['Processing.Method'].isna()| coffe_reviews['Color'].isna()|coffe_reviews['Variety'].isna()]
+
+    st.write(outliers_processing)
+    st.write(outliers_processing.shape)
+
+    refactor_null_processing_values(coffe_reviews)
+
+    #Inclusão do código visualmente no streamlit --------------------------------------------
+    st.code("""
+    mask = coffe_reviews['Processing.Method'].isna()
+    coffe_reviews.loc[mask, 'Processing.Method'] = coffe_reviews.loc[mask,'Processing.Method'].fillna('Washed / Wet')
+    """)
+    #----------------------------------------------------------------------------------------
+    
+    st.write(coffe_reviews)
+    st.write(coffe_reviews['Processing.Method'].value_counts(dropna=False))
+
+    st.write(outliers_color)
+    st.write(outliers_color.shape)
+
+    st.write(outliers_variety)
+    st.write(outliers_variety.shape)
+
     st.write(outliers)
     st.write(outliers.shape)
