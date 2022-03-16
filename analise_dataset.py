@@ -4,6 +4,7 @@ import seaborn as sns
 import streamlit as st
 import pandas as pd
 import numpy as np
+import altair as alt
 import os
 
 
@@ -35,6 +36,7 @@ if __name__ == '__main__':
     st.markdown("""#### Exibiremos os primeiros e os últimos cinco registros para entendermos melhor a estrutura dos dados.""")
     st.write(merged_coffe_reviews.head())
     st.write(merged_coffe_reviews.tail())
+    st.write(merged_coffe_reviews.shape)
 
     st.markdown("""#### Checando valores únicos.""")
     st.write(merged_coffe_reviews.nunique())
@@ -48,13 +50,27 @@ if __name__ == '__main__':
     'Owner.1', 'Certification.Body', 'Certification.Address', 'Certification.Contact', 
     'unit_of_measurement', 'altitude_low_meters', 'altitude_high_meters', 'Bag.Weight', 'Number.of.Bags'], axis=1)
     
-    #Inclusão do código visualmente no streamlit
+    #Inclusão do código visualmente no streamlit --------------------------------------------
     st.code("""coffe_reviews = merged_coffe_reviews.drop(['Owner', 'Farm.Name', 'Lot.Number', 
     'Mill','ICO.Number', 'Company', 'Altitude', 'Region', 'Producer', 'In.Country.Partner', 
     'Owner.1', 'Certification.Body', 'Certification.Address', 'Certification.Contact', 
     'unit_of_measurement', 'altitude_low_meters', 'altitude_high_meters', 'Bag.Weight', 'Number.of.Bags'], axis=1)""")
+    #----------------------------------------------------------------------------------------
 
+    st.markdown("""#### Novamente exibiremos os primeiros e os últimos cinco registros.""")
     st.write(coffe_reviews.head())
     st.write(coffe_reviews.tail())
+    st.write(coffe_reviews.shape)
 
-    species_ratings = coffe_reviews.filter(['altitude_mean_meters', 'Total.Cup.Points'], axis=1)
+    st.markdown("""#### Checando valores únicos.""")
+    st.write(coffe_reviews.nunique())
+
+    st.markdown("""#### Checando os valores nulos.""")
+    st.write(coffe_reviews.isnull().sum())
+
+    country_entries = coffe_reviews.filter(['Country.of.Origin']).value_counts()
+    df_country_entries = pd.DataFrame(country_entries)
+    df_country_entries = df_country_entries.reset_index()
+    df_country_entries.columns = ['Country', 'Entries']
+
+    st.write(df_country_entries)
