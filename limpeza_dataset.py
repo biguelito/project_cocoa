@@ -18,6 +18,14 @@ def refactor_null_processing_values(coffe_reviews):
     mask = coffe_reviews['Processing.Method'].isna()
     coffe_reviews.loc[mask, 'Processing.Method'] = coffe_reviews.loc[mask,'Processing.Method'].fillna('Washed / Wet')
 
+def refactor_null_color_values(coffe_reviews):
+    mask = coffe_reviews['Color'].isna()
+    coffe_reviews.loc[mask, 'Color'] = coffe_reviews.loc[mask,'Color'].fillna('Green')
+
+def refactor_null_variety_values(coffe_reviews):
+    mask = coffe_reviews['Variety'].isna()
+    coffe_reviews.loc[mask, 'Variety'] = coffe_reviews.loc[mask,'Variety'].fillna('Caturra')
+
 if __name__ == '__main__':
     datasets = {}
     listagem_datasets = os.listdir('.\\dataset\\')
@@ -92,6 +100,7 @@ if __name__ == '__main__':
     st.write(processing_method)
 
     st.markdown('#### Cor dos grãos')
+    coffe_reviews.loc[coffe_reviews.Color == 'Blue-Green', 'Color'] = 'Bluish-Green'
     color_of_coffee = coffe_reviews['Color'].value_counts(dropna=False)
     st.write(color_of_coffee)
 
@@ -99,32 +108,49 @@ if __name__ == '__main__':
     variety_of_coffee = coffe_reviews['Variety'].value_counts(dropna=False)
     st.write(variety_of_coffee)
 
-    st.markdown('#### Tabela de outliers')
     outliers_processing = coffe_reviews[coffe_reviews['Processing.Method'].isna()]
     outliers_color = coffe_reviews[coffe_reviews['Color'].isna()]
     outliers_variety = coffe_reviews[coffe_reviews['Variety'].isna()]
     outliers = coffe_reviews[coffe_reviews['Processing.Method'].isna()| coffe_reviews['Color'].isna()|coffe_reviews['Variety'].isna()]
 
+    st.markdown('#### Outliers Processing')
     st.write(outliers_processing)
     st.write(outliers_processing.shape)
-
+    st.markdown('#### Método de processamentos sem nulos')
     refactor_null_processing_values(coffe_reviews)
-
     #Inclusão do código visualmente no streamlit --------------------------------------------
     st.code("""
     mask = coffe_reviews['Processing.Method'].isna()
     coffe_reviews.loc[mask, 'Processing.Method'] = coffe_reviews.loc[mask,'Processing.Method'].fillna('Washed / Wet')
     """)
     #----------------------------------------------------------------------------------------
-    
     st.write(coffe_reviews)
     st.write(coffe_reviews['Processing.Method'].value_counts(dropna=False))
 
+    st.markdown('#### Outliers Colors')
     st.write(outliers_color)
     st.write(outliers_color.shape)
+    st.markdown('#### Cor dos grãos sem nulos')
+    refactor_null_color_values(coffe_reviews)
+    st.code("""
+    mask = coffe_reviews['Color'].isna()
+    coffe_reviews.loc[mask, 'Color'] = coffe_reviews.loc[mask,'Color'].fillna('Green')
+    """)
+    st.write(coffe_reviews)
+    st.write(coffe_reviews['Color'].value_counts(dropna=False))
 
+    st.markdown('#### Outliers Variety')
     st.write(outliers_variety)
     st.write(outliers_variety.shape)
+    st.markdown('#### Variedade dos Grãos sem nulos')
+    refactor_null_variety_values(coffe_reviews)
+    st.code("""
+    mask = coffe_reviews['Variety'].isna()
+    coffe_reviews.loc[mask, 'Variety'] = coffe_reviews.loc[mask,'Variety'].fillna('Caturra')
+    """)
+    st.write(coffe_reviews)
+    st.write(coffe_reviews['Variety'].value_counts(dropna=False))
 
+    st.markdown('#### Outliers')
     st.write(outliers)
     st.write(outliers.shape)
