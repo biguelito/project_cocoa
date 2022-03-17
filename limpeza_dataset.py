@@ -156,7 +156,7 @@ if __name__ == '__main__':
     st.write(country_entries)
 
     st.markdown("""#### Gráfico de barra País/Registros""")
-    chart_pais_registro = alt.Chart(country_entries).mark_bar().encode(
+    chart = chart_pais_registro = alt.Chart(country_entries).mark_bar().encode(
         x = 'Registros',
         y = alt.Y('Países', sort='-x'),
         tooltip=['Registros']
@@ -164,3 +164,6 @@ if __name__ == '__main__':
     st.altair_chart(chart_pais_registro, use_container_width=True)
     coffe_reviews = coffe_reviews.drop(labels=1310, axis=0)
     st.write(coffe_reviews.describe())
+    st.altair_chart(chart, use_container_width=True)
+
+    coffe_reviews.to_csv('.\\dataset_limpo\\clean_coffe_reviews.csv')
