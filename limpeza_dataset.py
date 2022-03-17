@@ -145,7 +145,6 @@ if __name__ == '__main__':
     # st.write(coffe_reviews['Variety'].value_counts(dropna=False))
     st.markdown('#### Remoção de Variety')
     coffe_reviews = coffe_reviews.drop(['Variety'], axis=1)
-    coffe_reviews = coffe_reviews.reset_index()
 
     st.write(coffe_reviews.head())
     st.write(coffe_reviews.shape)
@@ -157,9 +156,11 @@ if __name__ == '__main__':
     st.write(country_entries)
 
     st.markdown("""#### Gráfico de barra País/Registros""")
-    chart = alt.Chart(country_entries).mark_bar().encode(
+    chart_pais_registro = alt.Chart(country_entries).mark_bar().encode(
         x = 'Registros',
         y = alt.Y('Países', sort='-x'),
         tooltip=['Registros']
     )
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart_pais_registro, use_container_width=True)
+    coffe_reviews = coffe_reviews.drop(labels=1310, axis=0)
+    st.write(coffe_reviews.describe())
