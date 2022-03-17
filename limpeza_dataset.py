@@ -163,3 +163,5 @@ if __name__ == '__main__':
         tooltip=['Registros']
     )
     st.altair_chart(chart, use_container_width=True)
+
+    coffe_reviews.to_csv('.\\dataset_limpo\\clean_coffe_reviews.csv')
